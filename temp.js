@@ -1,17 +1,4 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Chatty</title>
-    <link rel="stylesheet" href="./styles/home.scss"
-</head>
-<body>
-  <div id="react-root"></div>
-  <script src="/build/bundle.js"></script>
-</body>
-</html>
-
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -126,4 +113,4 @@
   <input class="chatbar-message" placeholder="Type a message and hit ENTER" />
 </footer>
 </body>
-</html> -->
+</html>
