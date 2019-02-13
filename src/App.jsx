@@ -12,6 +12,7 @@ class MessageList extends Component {
     let allMessages = this.props.messages.map((message) => {
       return <Message key={message.id} message={message} />
     });
+    console.log("allMessages: ", allMessages);
     return (
       <div className="messages">
         {allMessages}
@@ -23,7 +24,7 @@ class MessageList extends Component {
 
 class Message extends Component {
   render() {
-    console.log("this: ", this.props);
+    // console.log("this: ", this.props);
     return (
       <div>
         <div className="message">
@@ -39,55 +40,29 @@ class Message extends Component {
 
 
 class Chatbar extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.callAddMsg = this.callAddMsg.bind(this);
-  //   // this.checkEnter = this.checkEnter.bind(this);
-  // }
+  constructor(props) {
+    super(props);
+    this.createNewMessage = this.createNewMessage.bind(this);
+  }
 
-  // checkEnter(event) {
-    // event.prevenDefault;
-  // checkEnter = (event) => {
-    // event.preventDefault();
-  // onKeyPress = (e) => {    
-  //   console.log("ENTER");
-  //   // (event.keyCode === 13) ? this.props.addMessage : ""
-  // }
-
-  // handleKeyPress = (event) => {
-  //   console.log("wwwwwwwwwwww");
-  //   if(event.key === "13") {
-  //     console.log("+++++++++++");
-  //   }
-  // } 
-  // onKeyDown={ this.myMethod }
-
-
-  // callAddMsg(event) {
-  //   console.log("event.username: ", event.userName);
-  //   event.preventDefault();
-  //   this.props.addMessage(event);
-  // }
-
-  
+  createNewMessage(event){
+    // console.log("writing")
+    if(event.key==="Enter"){
+      // console.log("a: ", event.target.value)
+      this.props.addMessage(event.target.value)
+      event.target.value = '';
+    }
+  }
 
   render () {
-    const onSubmit = evt => {
-      evt.preventDefault();
-      // console.log("evt.target.elements.content: ", evt.target.elements.userName.value);
-      const message = evt.target.elements;
-      this.props.addMessage(message);
-      evt.target.elements.content.value = "";
-    };
-
     return (
       <div className="chatbar">
-        <form onSubmit={onSubmit}>
           <input className="chatbar-username" type="text" name="userName"
-            defaultValue={this.props.user.name}  />
-          <input className="chatbar-message" placeholder="Type a message and hit ENTER" name="content"/>
-          <button>Send Msg</button>
-        </form>
+            defaultValue={this.props.user}  />
+          <input className="chatbar-message" 
+            placeholder="Type a message and hit ENTER" 
+            name="content"
+            onKeyPress = {this.createNewMessage} />
       </div>
     )
   }
@@ -127,17 +102,19 @@ class App extends Component {
       // Update the state of the app component.
       // Calling setState will trigger a call to render() in App and all child components.
       this.setState({messages: messages})
-    }, 2000);
+    }, 1000);
   }
 
   addMessage(data) {
-    console.log("this.state::::: ", this.state);
+    // console.log("this.state::::: ", this.state);
+    console.log("data: ", data);
     const oldMsgs = this.state.messages;
     const tempMsg = {
-      userName: data.userName.value,
-      content: data.content.value,
+      userName: this.state.currentUser.name,
+      content: data,
       id: this.state.messages.length + 1
     };
+    console.log("tempMsg: ", tempMsg);
     console.log("oldMsgs: ", oldMsgs);
     const newMsg = [...oldMsgs, tempMsg];
 
@@ -150,7 +127,7 @@ class App extends Component {
       <div>
         <Welcome />
         <MessageList messages={this.state.messages}/>
-        <Chatbar user={this.state.currentUser} addMessage={this.addMessage} />
+        <Chatbar user={this.state.currentUser.name} addMessage={this.addMessage} />
       </div>
     );
   }
