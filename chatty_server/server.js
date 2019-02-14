@@ -27,7 +27,6 @@ wss.on('connection', function connection(ws) {
   console.log("22222222222");
   ws.on('message', function incoming(data) {
     // Broadcast to everyone else.
-    // const message = JSON.parse(data);
     console.log("step2: ", data);
     wss.clients.forEach(function each(client) {
       client.send(data);
