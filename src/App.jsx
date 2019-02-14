@@ -1,89 +1,92 @@
 import React, {Component} from 'react';
 const uuid = require('uuid/v1');
 
+import Chatbar from "./Chatbar.jsx"
+import MessageList from "./MessageList.jsx"
+
 
 function Welcome(props) {
   return <h1 className="navbar">Chatty</h1>;
 }
 
 
-class MessageList extends Component {
-  render() {
-    let allMessages = this.props.messages.map((message) => {
-      return <Message key={message.id} message={message} />
-    });
-    return (
-      <div className="messages">
-        {allMessages}
-      </div>
-    )
-  }
-}
+// class MessageList extends Component {
+//   render() {
+//     let allMessages = this.props.messages.map((message) => {
+//       return <Message key={message.id} message={message} />
+//     });
+//     return (
+//       <div className="messages">
+//         {allMessages}
+//       </div>
+//     )
+//   }
+// }
 
 
-class Message extends Component {
-  render() {
-    return (
-      <div>
-        <div className="message">
-          <span className="message-username">{this.props.message.currentUser}</span>
-          <span className="message-content">{this.props.message.content}</span>
-        </div>
-        <div className="message system">
-        </div>
-      </div>
-    );
-  }
-}
+// class Message extends Component {
+//   render() {
+//     return (
+//       <div>
+//         <div className="message">
+//           <span className="message-username">{this.props.message.currentUser}</span>
+//           <span className="message-content">{this.props.message.content}</span>
+//         </div>
+//         <div className="message system">
+//         </div>
+//       </div>
+//     );
+//   }
+// }
 
 
-class Chatbar extends Component {
-  constructor(props) {
-    super(props);
-    this.createNewMessage = this.createNewMessage.bind(this);
-    this.setsUserName = this.setsUserName.bind(this);
-  }
+// class Chatbar extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.createNewMessage = this.createNewMessage.bind(this);
+//     this.setsUserName = this.setsUserName.bind(this);
+//   }
 
-  createNewMessage(event) {
-    if(event.key==="Enter"){
-      const msg = {
-        // userName: this.props.user,
-        content: event.target.value
-      };
+//   createNewMessage(event) {
+//     if(event.key==="Enter"){
+//       const msg = {
+//         // userName: this.props.user,
+//         content: event.target.value
+//       };
 
-      // Send the msg object as a JSON-formatted string.
-      console.log("msg: ", msg);
-      this.props.sendMessage(msg);
-      event.target.value = "";
-    }
-  }
+//       // Send the msg object as a JSON-formatted string.
+//       console.log("msg: ", msg);
+//       this.props.sendMessage(msg);
+//       event.target.value = "";
+//     }
+//   }
 
-  setsUserName(event) {
-    console.log("hererree", event.target.value);
-    this.props.setsUser(event.target.value);
-  }
-
-
-
+//   setsUserName(event) {
+//     console.log("hererree", event.target.value);
+//     this.props.setsUser(event.target.value);
+//   }
 
 
 
 
-  render () {
-    return (
-      <div className="chatbar">
-          <input className="chatbar-username" type="text" name="userName"
-            placeholder="user name"
-            onBlur = {this.setsUserName}  />
-          <input className="chatbar-message" 
-            placeholder="Type a message and hit ENTER" 
-            name="content"
-            onKeyPress = {this.createNewMessage}
-             />
-      </div>
-    )
-  }
-}
+
+
+
+//   render () {
+//     return (
+//       <div className="chatbar">
+//           <input className="chatbar-username" type="text" name="userName"
+//             placeholder="user name"
+//             onBlur = {this.setsUserName}  />
+//           <input className="chatbar-message" 
+//             placeholder="Type a message and hit ENTER" 
+//             name="content"
+//             onKeyPress = {this.createNewMessage}
+//              />
+//       </div>
+//     )
+//   }
+// }
 
 
 class App extends Component {
