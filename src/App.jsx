@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 // import { generateRandomId } from "./utils";
-// import keydown from 'react-keydown';
+const uuid = require('uuid/v1');
+
 
 function Welcome(props) {
   return <h1 className="navbar">Chatty</h1>;
@@ -45,14 +46,29 @@ class Chatbar extends Component {
     this.createNewMessage = this.createNewMessage.bind(this);
   }
 
-  createNewMessage(event){
-    // console.log("writing")
+  createNewMessage(event) {
     if(event.key==="Enter"){
-      // console.log("a: ", event.target.value)
-      this.props.addMessage(event.target.value)
-      event.target.value = '';
+        console.log("chatbar onopen");
+  
+      // Construct a msg object containing the data the server needs to process the message from the chat client.
+      const msg = {
+        userName: this.props.user,
+        content: event.target.value
+      };
+
+console.log("sending: ", msg);
+      // Send the msg object as a JSON-formatted string.
+      // sendSocket.send(JSON.stringify(msg));
+      const newMessage = JSON.stringify(msg);
+      console.log("message stringlifidied: ", newMessage);
+      this.props.sendMessage(msg);
+      // sendSocket.send(event.target.value);
+      // }
+      // Blank the text input element, ready to receive the next line of text from the user.
+      event.target.value = "";
     }
   }
+
 
   render () {
     return (
@@ -62,7 +78,9 @@ class Chatbar extends Component {
           <input className="chatbar-message" 
             placeholder="Type a message and hit ENTER" 
             name="content"
-            onKeyPress = {this.createNewMessage} />
+            onKeyPress = {this.createNewMessage}
+            // onKeyPress = {sendText}
+             />
       </div>
     )
   }
@@ -76,58 +94,81 @@ class App extends Component {
     this.state = {
       currentUser: {name: "Bob"},
       messages: [
-        {
-          userName: "Bob",
-          content: "Has anyone seen my marbles?",
-          id: 1
-        },
-        {
-          userName: "Anonymous",
-          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good.",
-          id: 2
-        }
+        // {
+        //   userName: "Bob",
+        //   content: "Has anyone seen my marbles?",
+        //   id: 1
+        // },
+        // {
+        //   userName: "Anonymous",
+        //   content: "No, I think you lost them. You lost your marbles Bob. You lost them for good.",
+        //   id: 2
+        // }
       ]};
     
-    this.addMessage = this.addMessage.bind(this);
-      
+    // this.addMessage = this.addMessage.bind(this);
+    this.sendMsg = this.sendMsg.bind(this);
+    
   }
+
+
 
   componentDidMount() {
-    console.log("componentDidMount <App />");
-    setTimeout(() => {
-      console.log("Simulating incoming message");
-      // Add a new message to the list of messages in the data store
-      const newMessage = {id: 3, userName: "Michelle", content: "Hello there!"};
-      const messages = this.state.messages.concat(newMessage)
-      // Update the state of the app component.
-      // Calling setState will trigger a call to render() in App and all child components.
-      this.setState({messages: messages})
-    }, 1000);
-  }
+    this.wss = new WebSocket("ws://localhost:3001");
 
-  addMessage(data) {
-    // console.log("this.state::::: ", this.state);
-    console.log("data: ", data);
-    const oldMsgs = this.state.messages;
-    const tempMsg = {
-      userName: this.state.currentUser.name,
-      content: data,
-      id: this.state.messages.length + 1
+    this.wss.onopen = function (event) {
+      console.log("connected to the server"); 
+
+
+     
     };
-    console.log("tempMsg: ", tempMsg);
-    console.log("oldMsgs: ", oldMsgs);
-    const newMsg = [...oldMsgs, tempMsg];
+    this.wss.onmessage =(event)=> {
+      console.log("event: ", event);
+      const message = JSON.parse(event.data);
+      
+      console.log("messages: ", message);
+      // code to handle incoming message
+      //this.addMessage(messages);
+      let allMessages = this.state.messages.concat(message);
+      this.setState({
+        messages: allMessages
+      })
+    };
 
-    console.log("newMsgs: ", newMsg);
-    this.setState({ messages: newMsg });
   }
+
+
+  sendMsg(content) {
+    console.log("Test ",content);
+    content["id"] = uuid();
+    this.wss.send(JSON.stringify(content));
+  }
+
+  // addMessage(data) {
+  //   // console.log("this.state::::: ", this.state);
+  //   console.log("data: ", data);
+  //   const oldMsgs = this.state.messages;
+  //   const tempMsg = {
+  //     userName: this.state.currentUser.name,
+  //     content: data,
+  //     // id: this.state.messages.length + 1
+  //     id: uuid()
+  //   };
+  //   console.log("tempMsg: ", tempMsg);
+  //   console.log("oldMsgs: ", oldMsgs);
+  //   const newMsg = [...oldMsgs, tempMsg];
+
+  //   console.log("newMsgs: ", newMsg);
+  //   this.setState({ messages: newMsg });
+  // }
 
   render() {
     return (
       <div>
         <Welcome />
         <MessageList messages={this.state.messages}/>
-        <Chatbar user={this.state.currentUser.name} addMessage={this.addMessage} />
+        {/* <Chatbar user={this.state.currentUser.name} addMessage={this.addMessage} /> */}
+        <Chatbar user={this.state.currentUser.name} sendMessage={this.sendMsg}/>
       </div>
     );
   }
