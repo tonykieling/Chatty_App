@@ -5,8 +5,16 @@ import Chatbar from "./Chatbar.jsx"
 import MessageList from "./MessageList.jsx"
 
 
-function Welcome(props) {
-  return <h1 className="navbar">Chatty</h1>;
+// function Welcome(props) {
+const Welcome = (props) => {  
+  console.log("props: ", props.argm.userCounter);
+  return (
+    <div>
+      <h1 className="navbar">Chatty</h1>
+      {/* <h3 className="counter"> {this.props.userCounter}</h3> */}
+      <h4 className="counter"> {props.argm.userCounter} users connected</h4>
+    </div>
+      );
 }
 
 
@@ -16,7 +24,8 @@ class App extends Component {
 
     this.state = {
       currentUser: {name: "Bob"},
-      messages: []
+      messages: [],
+      userCounter: 1,
     };
     this.sendMsg = this.sendMsg.bind(this);
     this.setsUser = this.setsUser.bind(this);
@@ -33,31 +42,34 @@ class App extends Component {
     this.wss.onmessage =(event)=> {
       const message = JSON.parse(event.data);
       
-      // code to handle incoming message
-      console.log("message beforEE: ", message);
-      if (message.type === "IncomingMsg") {
-        console.log("this is a IncomingMsg", message);
+      switch(message.type) {
+      case "IncomingMsg":
         let allMessages = this.state.messages.concat(message);
-        // console.log("allmessages: ", allMessages);
-  
         this.setState({
           messages: allMessages
-        })
-      } else if (message.type === "IncomingNotf") {
+        });
+        break;
+      case "IncomingNotf":
         message.user = "";
-        console.log("this is a IncomingNotf: ", message);
-        let allMessages = this.state.messages.concat(message);
-
+        let allMessages1 = this.state.messages.concat(message);
         this.setState({
-          messages: allMessages
-        })
+          messages: allMessages1
+        });
+        break;
+      case "info":
+console.log("info msg: ", message);
+        this.setState({
+          userCounter: message.numberOfUsers
+        });
+        break;
+      default:
+        console.log("default");
       }
     };
   }
 
 
   sendMsg(data) {
-    console.log("sending content: ", data);
     const message = {
       type: data.type,
       id: uuid(),
@@ -68,18 +80,14 @@ class App extends Component {
   }
 
   setsUser(newName) {
-    // console.log("event::: ", newName);
-    // console.log("this.state1: ", this.state);
     this.setState({currentUser: {name: newName}});
-    // this.setState({currentUser: newName});
-    // console.log("this.state2: ", this.state);
   }
 
 
   render() {
     return (
       <div>
-        <Welcome />
+        <Welcome argm={this.state} />
         <MessageList messages={this.state.messages}/>
         <Chatbar setsUser={this.setsUser} sendMessage={this.sendMsg} user={this.state.currentUser.name}/>
       </div>

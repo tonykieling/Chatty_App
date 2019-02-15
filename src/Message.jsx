@@ -3,8 +3,6 @@ import React, {Component} from 'react';
 export default class Message extends Component {
   render() {
 
-    console.log("this.state=== ", this.props.message.type)
-
     if (this.props.message.type === "IncomingMsg")  {
 
       return (
