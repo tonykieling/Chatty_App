@@ -27,35 +27,17 @@ wss.on('connection', function connection(ws) {
   console.log("22222222222");
   ws.on('message', function incoming(data) {
     // Broadcast to everyone else.
-    console.log("step2: ", data);
+    console.log("server received: ", data);
+    let message = JSON.parse(data);
+    if (message.type === "postMsg") {
+      message.type = "IncomingMsg";
+    } else if (message.type === "postNotification") {
+      message.type = "IncomingNotf";
+      console.log("message for notification: ", message);
+    }
     wss.clients.forEach(function each(client) {
-      client.send(data);
-      // if (client !== ws && client.readyState === WebSocket.OPEN) {
-      //   console.log("asdasdasdasd");
-      //   client.send(data);
-      // }
+      client.send(JSON.stringify(message));
     });
+
   });
 });
-
-
-// Set up a callback that will run when a client connects to the server
-// When a client connects they are assigned a socket, represented by
-// the ws parameter in the callback.
-// wss.on('connection', (ws) => {
-//   console.log('Client connected');
-
-
-//   ws.onmessage = function (content) {
-//     // console.log("receiving from client: ", (data));
-//     // console.log("JSON parsed: ", JSON.parse(data));
-//     console.log("data: ", content.data);
-//     const message = JSON.parse(content.data);
-//     console.log("message parsed: ", message);
-//       // addMessage(event.data);
-//   }
-
-//   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-//   ws.on('close', () => console.log('Client disconnected'));
-// });
-

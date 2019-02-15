@@ -4,40 +4,44 @@ import React, {Component} from 'react';
 export default class Chatbar extends Component {
   constructor(props) {
     super(props);
+    console.log("props: ", this.props);
     this.createNewMessage = this.createNewMessage.bind(this);
     this.setsUserName = this.setsUserName.bind(this);
   }
 
   createNewMessage(event) {
     if(event.key==="Enter"){
-      const msg = {
-        // userName: this.props.user,
+      const message = {
+        type: "postMsg",
         content: event.target.value
-      };
-
-      // Send the msg object as a JSON-formatted string.
-      console.log("msg: ", msg);
-      this.props.sendMessage(msg);
+      }
+      // this.props.sendMessage(event.target.value);
+      this.props.sendMessage(message);
       event.target.value = "";
     }
   }
 
   setsUserName(event) {
-    console.log("hererree", event.target.value);
-    this.props.setsUser(event.target.value);
+    // IncomingNotf
+    console.log("PROPS: ", this.props);
+    let currentUser = event.target.value;
+    if (currentUser !== this.props.user) {
+      console.log("DIFFFFF NAMES");
+      (currentUser === "") ? currentUser = "Anonymous" : "";
+      const message = {
+        type: "postNotification",
+        content: `${this.props.user} changed their name to ${currentUser}`
+      }
+      this.props.sendMessage(message);
+    }
+    this.props.setsUser(currentUser);
   }
-
-
-
-
-
-
 
   render () {
     return (
       <div className="chatbar">
           <input className="chatbar-username" type="text" name="userName"
-            placeholder="user name"
+            defaultValue={this.props.user}
             onBlur = {this.setsUserName}  />
           <input className="chatbar-message" 
             placeholder="Type a message and hit ENTER" 
