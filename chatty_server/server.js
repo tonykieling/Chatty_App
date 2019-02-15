@@ -6,24 +6,27 @@ const PORT = 3001;
 
 // Create a new express server
 const server = express()
-   // Make the express server serve static assets (html, javascript, css) from the /public folder
   .use(express.static('public'))
   .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on ${ PORT }`));
+
+
+function updateNumberOfUSers(connection) {
+  const numberOfUsers = {
+    type: "info",
+    numberOfUsers: wss.clients.size
+  }
+  connection.forEach(function each(client) {
+    client.send(JSON.stringify(numberOfUsers));
+  });
+}
 
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 
 wss.on('connection', function connection(ws) {
   
-  //when write the auxiliary function, call it here and bellow (close)
-  const numberOfUsers = {
-    type: "info",
-    numberOfUsers: wss.clients.size
-  }
-  wss.clients.forEach(function each(client) {
-    console.log("XXXXXXX: ");
-    client.send(JSON.stringify(numberOfUsers));
-  });
+  //update the number of connected users when they connect to the system and display the users' number in the navbar
+  updateNumberOfUSers(wss.clients);
 
   ws.on('message', function incoming(data) {
     // Broadcast to everyone else.
@@ -42,8 +45,8 @@ wss.on('connection', function connection(ws) {
 
   });
 
-  // need to deal with close connections and update the numebr of users connected
-  // ws.on('close', function incoming(data) {
-    // write a function (the same to above) and call it here and above, as well
-
+  ws.on('close', function close() {
+    //update the number of connected users when they disconnect to the system and display the users' number in the navbar
+    updateNumberOfUSers(wss.clients);
+  });
 });

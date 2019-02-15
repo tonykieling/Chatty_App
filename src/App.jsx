@@ -3,19 +3,17 @@ const uuid = require('uuid/v1');
 
 import Chatbar from "./Chatbar.jsx"
 import MessageList from "./MessageList.jsx"
+import Welcome from "./Welcome.jsx"
 
-
-// function Welcome(props) {
-const Welcome = (props) => {  
-  console.log("props: ", props.argm.userCounter);
-  return (
-    <div>
-      <h1 className="navbar">Chatty</h1>
-      {/* <h3 className="counter"> {this.props.userCounter}</h3> */}
-      <h4 className="counter"> {props.argm.userCounter} users connected</h4>
-    </div>
-      );
-}
+// const Welcome = (props) => {  
+//   console.log("props: ", props.argm.userCounter);
+//   return (
+//     <div>
+//       <h1 className="navbar">Chatty</h1>
+//       <h4 className="counter"> {props.argm.userCounter} users connected</h4>
+//     </div>
+//       );
+// }
 
 
 class App extends Component {
@@ -57,7 +55,6 @@ class App extends Component {
         });
         break;
       case "info":
-console.log("info msg: ", message);
         this.setState({
           userCounter: message.numberOfUsers
         });
