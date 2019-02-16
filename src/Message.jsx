@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 
+// --component responsable for apply the html markup for each message received from MessageList component
 export default class Message extends Component {
   render() {
 
+    // --check message's type (notification or normal message), in order to be displayed in the correct way
     if (this.props.message.type === "IncomingMsg")  {
 
       return (

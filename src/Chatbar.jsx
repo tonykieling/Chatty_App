@@ -1,6 +1,7 @@
 require("../styles/home.scss")
 import React, {Component} from 'react';
 
+// --this component is responsable for the Chatbar,  name and message editable fields
 export default class Chatbar extends Component {
   constructor(props) {
     super(props);
@@ -8,6 +9,7 @@ export default class Chatbar extends Component {
     this.setsUserName = this.setsUserName.bind(this);
   }
 
+  // --function to deal with 'enter' typing which triggers the sendMessage method received from the APP component  
   createNewMessage(event) {
     if(event.key==="Enter"){
       const message = {
@@ -19,9 +21,15 @@ export default class Chatbar extends Component {
     }
   }
 
+  // --function to deal with user's change name and which triggers the sendMessage (method received from the APP component)
+  // it's applied only if there is a user's name changing.  
   setsUserName(event) {
     let currentUser = event.target.value;
+
+    // --check if the user changed their name
     if (currentUser !== this.props.user) {
+
+      // --sets Anonymous in case the field is blank
       (currentUser === "") ? currentUser = "Anonymous" : "";
       const message = {
         type: "postNotification",

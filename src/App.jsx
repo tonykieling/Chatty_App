@@ -1,21 +1,12 @@
 import React, {Component} from 'react';
-const uuid = require('uuid/v1');
 
 import Chatbar from "./Chatbar.jsx"
 import MessageList from "./MessageList.jsx"
 import Welcome from "./Welcome.jsx"
 
-// const Welcome = (props) => {  
-//   console.log("props: ", props.argm.userCounter);
-//   return (
-//     <div>
-//       <h1 className="navbar">Chatty</h1>
-//       <h4 className="counter"> {props.argm.userCounter} users connected</h4>
-//     </div>
-//       );
-// }
+const uuid = require('uuid/v1');
 
-
+// -- class responsable for the App, which will call its component's element
 class App extends Component {
   constructor(props) {
     super(props);
@@ -41,6 +32,7 @@ class App extends Component {
     this.wss.onmessage =(event)=> {
       const message = JSON.parse(event.data);
       
+      // --on receiving, there are 3 types of messages comming from the server: Message payload, Notification and user's counter (info)
       switch(message.type) {
       case "IncomingMsg":
         let allMessages = this.state.messages.concat(message);
@@ -67,6 +59,7 @@ class App extends Component {
   }
 
 
+  // --auxiliary function to send message
   sendMsg(data) {
     const message = {
       type: data.type,
@@ -77,6 +70,7 @@ class App extends Component {
     this.wss.send(JSON.stringify(message));
   }
 
+  // --auxiliary function to change user's name
   setsUser(newName) {
     this.setState({currentUser: {name: newName}});
   }

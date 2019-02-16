@@ -10,6 +10,8 @@ const server = express()
   .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on ${ PORT }`));
 
 
+// --auxiliary function to update connected user's counter
+// its used when a user gets in or gets out the App
 function updateNumberOfUSers(connection) {
   const numberOfUsers = {
     type: "info",

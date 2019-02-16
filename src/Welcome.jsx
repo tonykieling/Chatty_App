@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 
+// --this component is responsable for the nav bar
 export default class Welcome extends Component {  
   render() {
     return (
