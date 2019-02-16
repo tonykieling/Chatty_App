@@ -25,6 +25,7 @@ class App extends Component {
       messages: [],
       userCounter: 1,
     };
+    // const listOfColors = ["green", "blue", "orange", "purple"];
     this.sendMsg = this.sendMsg.bind(this);
     this.setsUser = this.setsUser.bind(this);
     console.log("this.state in App constructor: ", this.state);
