@@ -1,7 +1,7 @@
 # Chatty Application
 =====================
 
-It is a application which allows users exchange messages.
+It is an web application which allows users exchange messages.
 A minimal and light dev environment for ReactJS.
 
 ### Getting started
